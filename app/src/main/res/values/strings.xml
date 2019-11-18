@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WeekOfTasks</string>
+    <string name="task_title_label">Title</string>
+    <string name="task_title_hint">Enter task name</string>
+    <string name="task_detail_label">Details</string>
+    <string name="task_detail_hint">Enter task details here</string>
+    <string name="task_completed_label">Completed</string>
+</resources>
