@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,15 +23,10 @@ private const val TAG = "TaskListFragment"
 class TaskListFragment: Fragment() {
 
     private lateinit var taskRecyclerView: RecyclerView
-    private var adaper: TaskAdapter? = null
+    private var adaper: TaskAdapter? = TaskAdapter(emptyList())
 
     private val taskListViewModel: TaskListViewModel by lazy {
         ViewModelProviders.of(this).get(TaskListViewModel::class.java)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total dummy tasks created: ${taskListViewModel.tasks.size}")
     }
 
     override fun onCreateView(
@@ -43,13 +39,23 @@ class TaskListFragment: Fragment() {
         taskRecyclerView = view.findViewById(R.id.task_recycler_view) as RecyclerView
         taskRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        updateUI()
-
         return view
     }
 
-    private fun updateUI() {
-        val tasks = taskListViewModel.tasks
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        taskListViewModel.tasksLiveData.observe(
+            viewLifecycleOwner,
+            Observer { tasks ->
+                tasks?.let {
+                    Log.i(TAG, "Got tasks ${tasks.size}")
+                    updateUI(tasks)
+                }
+            }
+        )
+    }
+
+    private fun updateUI(tasks: List<Task>) {
         adaper = TaskAdapter(tasks)
         taskRecyclerView.adapter = adaper
     }

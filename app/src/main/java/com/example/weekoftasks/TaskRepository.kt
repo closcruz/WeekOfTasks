@@ -1,6 +1,7 @@
 package com.example.weekoftasks
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.example.weekoftasks.database.TaskDatabase
 import com.example.weekoftasks.models.Task
@@ -19,8 +20,10 @@ class TaskRepository private constructor(context: Context) {
 
     private  val taskDao = db.taskDao()
 
-    fun getTasks(): List<Task> = taskDao.getTasks()
-    fun getTask(id: UUID): Task? = taskDao.getTask(id)
+    fun getTasks(): LiveData<List<Task>> = taskDao.getTasks()
+    fun getTask(id: UUID): LiveData<Task?> = taskDao.getTask(id)
+
+
 
     companion object {
         private var INSTANCE: TaskRepository? = null
